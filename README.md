@@ -7,7 +7,11 @@ ServerStatus depends on a number of system files being in the right place. It ha
 # Installation
 ServerStatus requires PHP to be installed on the server in order to work. There are a number of guides on the internet showing how to set up PHP for your preferred web server. PHP5 is recommended, but earlier versions should work too.
 
-To install ServerStatus, simply clone this repository into your web-accessible directory.
+To install ServerStatus, clone this repository into your web-accessible directory using the following command :
+```
+git clone https://github.com/dan142/ServerStatus.git
+```
+It will then be accessible at "[yourdomain]/[yourdirectory]/ServerStatus", but you can copy the files wherever you like.
 
-#Configuration
-There are some ways you can configure ServerStatus to best suit your needs.
+# Configuration
+There are some ways you can configure ServerStatus to best suit your needs by editing the "serverstatus.ini" file in the "conf" directory. It allows you to show and hide sections of the page, and change some of the things that are measured.
