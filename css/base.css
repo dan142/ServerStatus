@@ -11,7 +11,7 @@
 body {
 	margin:0;
 	padding: 0;
-	font-family: "Open Sans", Arial, sans-serif;
+	font-family: sans-serif;
 	background: #444;
 }
 
@@ -37,19 +37,30 @@ a:hover {
 }
 
 h1 {
-	font-size: 1.8em;
-	line-height: 1.23em;
+	font-size: 36px;
+	color: #eee;
+	line-height: 80px;
+	text-align: center;
+}
+
+h1 > a {
 	color: #eee;
 }
 
+h1 > a:hover {
+	text-decoration: none;
+	color: #aaa;
+}
+
 h2 {
-	font-size: 22px;
+	font-size: 30px;
 	color: #eee;
+	line-height:36px;
 }
 
 h3 {
 	font-size: 26px;
-	font-family: 'Open Sans', Arial, sans-serif;
+	font-family: sans-serif;
 	font-weight: 400;
 	padding: 0 0 10px;
 	color: #eee;
@@ -62,27 +73,15 @@ h4 {
 }
 
 h5 {
-	font-size: 18px;
-	line-height:24px;
-	padding-bottom: 10px;
-	padding-top: 0px;
 	color: #eee;
+	font-size: 18px;
+	line-height:22px;
 }
 
 h6 {
 	font-size: 14px;
 	padding-bottom: 10px;
 	font-weight: bold;
-}
-
-ul {
-	font-size: 14px;
-	margin: 7px 0;
-	padding-left: 10px;
-}
-
-ul li {
-	margin-bottom: 5px;
 }
 
 .container .clear, body .clear {
@@ -133,55 +132,8 @@ header {
 	margin: 0;
 	padding: 0;
 	background-color: #333;
-	position: relative;
-}
-
-header nav {
-	width: 100%;
-	float: left;
-	margin: 0;
-	padding: 0px 0 0px;
-	background: #333;
 	border-bottom: 2px solid #ccc;
-	position: absolute;
-	box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
-	-moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
-	-webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,.3);
-	-webkit-transform: translateZ(0);
-}
-
-#logotext {
-	line-height: 80px;
-	text-align: center;
-}
-
-/*=== Menu ===*/
-
-ul.mainMenu {
-	margin: 0;
-	padding: 20px 0 20px 0;
-	float: right;
-}
-
-ul.mainMenu li {
-	display: inline;
-	float: left;
-	margin: 2px 10px;
-}
-
-ul.mainMenu li a {
-	font-size: 13px;
-	color: #fff;
-	text-decoration: none;
-}
-
-ul.mainMenu li a:hover {
-	color: #bbb;
-	-webkit-transition: color .12s ease-in-out;
-    -moz-transition: color .12s ease-in-out;
-    -ms-transition: color .12s ease-in-out;
-    -o-transition: color .12s ease-in-out;
-    transition: color .12s ease-in-out;
+	position: relative;
 }
 
 
@@ -201,37 +153,31 @@ ul.mainMenu li a:hover {
 	z-index: 0;
 }
 
-
-
-/*============*/
-/*=== Team ===*/
-/*============*/
-
-div#profiles > div {
-	padding: 40px 0 20px 0;
+div#modules > div {
+	padding: 40px 0 40px 0;
 	border-bottom: 2px solid #ccc;
 }
 
-div#profiles > div:last-child {
+div#modules > div:last-child {
 	padding: 40px 0 0 0;
 	border-bottom: 0;
 }
 
-div#profiles > div:first-child {
-	padding: 0 0 20px 0;
+div#modules > div:first-child {
+	padding: 0 0 40px 0;
 	border-bottom: 2px solid #ccc;
 }
 
-div#profiles > div:only-child {
-	padding: 0 0 20px 0;
+div#modules > div:only-child {
+	padding: 0 0 40px 0;
 	border-bottom: 0;
 }
 
-div#profiles > div > div {
+/*div#modules > div > div {
 	margin-bottom: 20px;
-}
+}*/
 
-div#profiles > div:nth-child(odd) > div.chart {
+div#modules > div:nth-child(odd) > div.chart {
 	float:right
 }
 
@@ -251,13 +197,16 @@ footer {
 
 footer h5 {
 	color: #ccc;
+	line-height:24px;
+	padding-bottom: 5px;
+	padding-top: 0px;
 }
 
 footer p {
 	color: #aaa;
 	line-height: 15px;
 	font-size: 12px;
-	margin-bottom: 7px;
+	margin-bottom: 15px;
 }
 
 footer a {
@@ -266,25 +215,6 @@ footer a {
 
 footer a:hover {
 	color: #777 !important;
-	-webkit-transition: color .12s ease-in-out;
-    -moz-transition: color .12s ease-in-out;
-    -ms-transition: color .12s ease-in-out;
-    -o-transition: color .12s ease-in-out;
-    transition: color .12s ease-in-out;
-}
-
-footer .social a {
-	float: left;
-	margin-right: 10px;
-}
-
-footer .social a img {
-	width: 35px;
-	opacity: 0.4;
-}
-
-footer .social a:hover img {
-	opacity: 1;
 }
 
 
@@ -299,11 +229,6 @@ footer .social a:hover img {
 
 @media only screen and (max-width: 767px) {
 
-	nav .container .logo {
-		margin-bottom: 0px;
-		text-align: center;
-	}
-
 	.container .clear, body .clear {
 		width: 100%;
 		float: left;
@@ -311,32 +236,8 @@ footer .social a:hover img {
 		margin: 10px 0;
 	}
 
-	ul.mainMenu {
-		margin: auto;
-		padding: 2px 0 32px;
-		float: none;
-		width: 220px;
-	}
-
-	h5 {
-		font-size: 18px;
-		line-height:24px;
-		padding-bottom: 10px;
-		padding-top: 10px;
-		color: #eee;
-	}
-
 	.container .one-third.column, .container .three.columns, .container .four.columns, .container .five.columns, .container .six.columns {
 		margin-bottom: 20px;
-	}
-
-	footer .social a {
-		float: left;
-		margin-right: 10px;
-	}
-
-	header {
-		height: 95px;
 	}
 }
 

@@ -7,11 +7,9 @@
 	<meta charset="utf-8">
 	<title>ServerStatus</title>
 	<meta name="description" content="ServerStatus">
-	<link rel="shortcut icon" href="../img/favicon.png" />
+	<link rel="shortcut icon" href="./img/favicon.png" />
 	<!--<meta http-equiv="X-UA-Compatible" content="IE=9" />-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-	<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,600&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-	<link href='http://fonts.googleapis.com/css?family=Crete+Round&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" href="./css/reset.min.css">
 	<link rel="stylesheet" href="./css/base.css">
 	<link rel="stylesheet" href="./css/skeleton.min.css">
@@ -20,24 +18,15 @@
     <script type="text/javascript" src="js/Chart.min.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
 	<?php
-		$config = parse_ini_file('./conf/serverstatus.ini');
-		$displayos = $config["displayos"];
-		$displaymemory = $config['displaymemory'];
-		$displayhdd1 = $config['displayhdd1'];
-		$displayhdd2 = $config['displayhdd2'];
-		$displayhdd3 = $config['displayhdd3'];
-		$displaycpu = $config['displaycpu'];
-		$displaynetwork = $config['displaynetwork'];
-		//os stat
-		if ($displayos != false) {
+		$config = parse_ini_file('./conf/conf.ini', true);
+		if ($config["os"]["display"] != false) {
 			$uptime = shell_exec("cut -d. -f1 /proc/uptime");
 			$days = floor($uptime/60/60/24);
 			$hours = $uptime/60/60%24;
 			$mins = $uptime/60%60;
 			$secs = $uptime%60;
 		}
-		//cpu stat
-		if ($displaycpu != false) {
+		if ($config["cpu"]["display"]) {
 			$prevVal = shell_exec("cat /proc/stat");
 			$prevArr = explode(' ',trim($prevVal));
 			$prevTotal = $prevArr[2] + $prevArr[3] + $prevArr[4] + $prevArr[5];
@@ -53,8 +42,7 @@
 			$stat['cpu_model'] = strstr($cpu_result, "\n", true);
 			$stat['cpu_model'] = str_replace("model name	: ", "", $stat['cpu_model']);
 		}
-		//memory stat
-		if ($displaymemory != false) {
+		if ($config["memory"]["display"] != false) {
 			$stat['mem_percent'] = round(shell_exec("free | grep Mem | awk '{print $3/$2 * 100.0}'"), 2);
 			$mem_result = shell_exec("cat /proc/meminfo | grep MemTotal");
 			$stat['mem_total'] = round(preg_replace("#[^0-9]+(?:\.[0-9]*)?#", "", $mem_result) / 1024 / 1024, 3);
@@ -62,35 +50,27 @@
 			$stat['mem_free'] = round(preg_replace("#[^0-9]+(?:\.[0-9]*)?#", "", $mem_result) / 1024 / 1024, 3);
 			$stat['mem_used'] = $stat['mem_total'] - $stat['mem_free'];
 		}
-		//hdd1 stat
-		if ($displayhdd1 != false) {
-			$hdd1path = $config['hdd1path'];
-			$stat['hdd1_free'] = round(disk_free_space("$hdd1path") / 1024 / 1024 / 1024, 2);
-			$stat['hdd1_total'] = round(disk_total_space("$hdd1path") / 1024 / 1024/ 1024, 2);
+		if ($config["hdd1"]["display"] != false) {
+			$stat['hdd1_free'] = round(disk_free_space($config['hdd1']['path']) / 1024 / 1024 / 1024, 2);
+			$stat['hdd1_total'] = round(disk_total_space($config['hdd1']['path']) / 1024 / 1024/ 1024, 2);
 			$stat['hdd1_used'] = $stat['hdd1_total'] - $stat['hdd1_free'];
 			$stat['hdd1_percent'] = round(sprintf('%.2f',($stat['hdd1_used'] / $stat['hdd1_total']) * 100), 2);
 		}
-		//hdd2 stat
-		if ($displayhdd2 != false) {
-			$hdd2path = $config['hdd2path'];
-			$stat['hdd2_free'] = round(disk_free_space("$hdd2path") / 1024 / 1024 / 1024, 2);
-			$stat['hdd2_total'] = round(disk_total_space("$hdd2path") / 1024 / 1024/ 1024, 2);
+		if ($config["hdd2"]["display"] != false) {
+			$stat['hdd2_free'] = round(disk_free_space($config['hdd2']['path']) / 1024 / 1024 / 1024, 2);
+			$stat['hdd2_total'] = round(disk_total_space($config['hdd2']['path']) / 1024 / 1024/ 1024, 2);
 			$stat['hdd2_used'] = $stat['hdd2_total'] - $stat['hdd2_free'];
 			$stat['hdd2_percent'] = round(sprintf('%.2f',($stat['hdd2_used'] / $stat['hdd2_total']) * 100), 2);
 		}
-		//hdd3 stat
-		if ($displayhdd3 != false) {
-			$hdd3path = $config['hdd3path'];
-			$stat['hdd3_free'] = round(disk_free_space("$hdd3path") / 1024 / 1024 / 1024, 2);
-			$stat['hdd3_total'] = round(disk_total_space("$hdd3path") / 1024 / 1024/ 1024, 2);
+		if ($config["hdd3"]["display"] != false) {
+			$stat['hdd3_free'] = round(disk_free_space($config['hdd3']['path']) / 1024 / 1024 / 1024, 2);
+			$stat['hdd3_total'] = round(disk_total_space($config['hdd3']['path']) / 1024 / 1024/ 1024, 2);
 			$stat['hdd3_used'] = $stat['hdd3_total'] - $stat['hdd3_free'];
 			$stat['hdd3_percent'] = round(sprintf('%.2f',($stat['hdd3_used'] / $stat['hdd3_total']) * 100), 2);
 		}
-		//network stat
-		if ($displaynetwork != false) {
-			$interface = $config['interface'];
-			$stat['network_rx'] = round(trim(file_get_contents("/sys/class/net/$interface/statistics/rx_bytes")) / 1024/ 1024/ 1024, 2);
-			$stat['network_tx'] = round(trim(file_get_contents("/sys/class/net/$interface/statistics/tx_bytes")) / 1024/ 1024/ 1024, 2);
+		if ($config["network"]["display"] != false) {
+			$stat['network_rx'] = round(trim(file_get_contents("/sys/class/net/".$config['network']['interface']."/statistics/rx_bytes")) / 1024/ 1024/ 1024, 2);
+			$stat['network_tx'] = round(trim(file_get_contents("/sys/class/net/".$config['network']['interface']."/statistics/tx_bytes")) / 1024/ 1024/ 1024, 2);
 		}
 	?>
 
@@ -103,22 +83,17 @@
 <body>
 	<header>
 		<a id="top"></a>
-
-<!--Navigation-->
-
-		<nav>
-			<div class='container'>
-				<div class='sixteen columns'>
-					<h1 id="logotext">ServerStatus</h1>
-				</div>
+		<div class='container'>
+			<div class='sixteen columns'>
+				<h1><a href='./'>ServerStatus</a></h1>
 			</div>
-		</nav>
+		</div>
 	</header>
 
 <!--Content-->
 
-	<div class='content' id='profiles'>
-		<?php if ($displayos != false): ?>
+	<div class='content' id='modules'>
+		<?php if ($config["os"]["display"] != false): ?>
 		<div class='container'>
 			<div class='sixteen columns'>
 				<h3>Operating System</h3>
@@ -129,7 +104,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($displaymemory != false): ?>
+		<?php if ($config["memory"]["display"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="memory" height="172" width="172"></canvas>
@@ -164,7 +139,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($displayhdd1 != false): ?>
+		<?php if ($config["hdd1"]["display"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="hdd1" height="172" width="172"></canvas>
@@ -190,7 +165,7 @@
 				</script>
 			</div>
 			<div class='ten columns'>
-				<h3>Hard Drive 1 (<?php echo $hdd1path; ?>)</h3>
+				<h3>Hard Drive 1 (<?php echo $config['hdd1']['path']; ?>)</h3>
 				<p>Hard Drive Usage: <?php echo $stat['hdd1_percent'],"%"; ?><br>
 				Hard Drive Capacity: <?php echo $stat['hdd1_total']," GB"; ?><br>
 				Hard Drive Free Space: <?php echo $stat['hdd1_free']," GB"; ?><br>
@@ -199,7 +174,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($displayhdd2 != false): ?>
+		<?php if ($config["hdd2"]["display"] != false): ?>
 			<div class='container'>
 				<div class='six columns chart'>
 					<canvas id="hdd2" height="172" width="172"></canvas>
@@ -225,7 +200,7 @@
 					</script>
 				</div>
 				<div class='ten columns'>
-					<h3>Hard Drive 2 (<?php echo $hdd2path; ?>)</h3>
+					<h3>Hard Drive 2 (<?php echo $config['hdd2']['path']; ?>)</h3>
 					<p>Hard Drive Usage: <?php echo $stat['hdd2_percent'],"%"; ?><br>
 					Hard Drive Capacity: <?php echo $stat['hdd2_total']," GB"; ?><br>
 					Hard Drive Free Space: <?php echo $stat['hdd2_free']," GB"; ?><br>
@@ -234,7 +209,7 @@
 				</div>
 			</div>
 		<?php endif ?>
-		<?php if ($displayhdd3 != false): ?>
+		<?php if ($config["hdd3"]["display"] != false): ?>
 			<div class='container'>
 				<div class='six columns chart'>
 					<canvas id="hdd3" height="172" width="172"></canvas>
@@ -260,7 +235,7 @@
 					</script>
 				</div>
 				<div class='ten columns'>
-					<h3>Hard Drive 3 (<?php echo $hdd3path; ?>)</h3>
+					<h3>Hard Drive 3 (<?php echo $config['hdd3']['path']; ?>)</h3>
 					<p>Hard Drive Usage: <?php echo $stat['hdd3_percent'],"%"; ?><br>
 					Hard Drive Capacity: <?php echo $stat['hdd3_total']," GB"; ?><br>
 					Hard Drive Free Space: <?php echo $stat['hdd3_free']," GB"; ?><br>
@@ -269,7 +244,7 @@
 				</div>
 			</div>
 		<?php endif ?> 
-		<?php if ($displaycpu != false): ?>
+		<?php if ($config["cpu"]["display"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="cpu" height="172" width="172"></canvas>
@@ -302,7 +277,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($displaynetwork != false): ?>
+		<?php if ($config["network"]["display"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="net" height="172" width="240"></canvas>
@@ -340,6 +315,10 @@
 
 	<footer>
 		<div class='container'>
+			<div class='eight columns'>
+				<h5>Configure</h5>
+				<p>Visit the <a href='./conf'>configuration</a> page to alter which modules are displayed by ServerStatus, or to modify the content of them.</p>
+			</div>
 			<div class='eight columns'>
 				<h5>GitHub</h5>
 				<p>Visit the ServerStatus <a href='https://github.com/dan142/ServerStatus'>GitHub page</a> to access the documentation or to help by submitting improvements.</p>
