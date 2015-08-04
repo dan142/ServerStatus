@@ -123,11 +123,11 @@
 
 	<form name=”form” id=”form” method=”get” action=./index.php>
 	<div class='content' id='modules'>
-		<div>
+		<div class='container'>
 			<h2>Configuration</h2>
 				<p>This page allows you to alter the options for each module included with ServerStatus. Be sure to hit submit at the bottom when you're done!</p>
 		</div>
-		<div>
+		<div class='container'>
 			<h3>Operating System</h3>
 				<h5>Display</h5>
 				<p>This will allow you to choose whether or not to display the Operating System section of the page.</p>
@@ -140,7 +140,7 @@
                 <br>
                 <br>
 		</div>
-		<div>
+		<div class='container'>
 			<h3>Memory</h3>
 				<h5>Display</h5>
 				<p>This will allow you to choose whether or not to display the Memory section of the page.</p>
@@ -153,7 +153,7 @@
                 <br>
                 <br>
 		</div>
-		<div>
+		<div class='container'>
 			<h3>Hard Drives</h3>
 				<br>
 				<h4>HDD1</h4>
@@ -235,7 +235,7 @@
                 <br>
                 <br>
 		</div>
-		<div>
+		<div class='container'>
 			<h3>CPU</h3>
 				<h5>Display</h5>
 				<p>This will allow you to choose whether or not to display the CPU section of the page.</p>
@@ -248,7 +248,7 @@
                 <br>
                 <br>
 		</div>
-		<div>
+		<div class='container'>
 			<h3>Network</h3>
 				<h5>Display</h5>
 				<p>This will allow you to choose whether or not to display the Network section of the page.</p>
