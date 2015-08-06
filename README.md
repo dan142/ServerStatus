@@ -1,5 +1,7 @@
 # ServerStatus
-A PHP web interface for monitoring system resources on Linux servers.
+A lightweight, mobile friendly PHP web interface for monitoring system resources on Linux servers.
+
+![ScreenShot](img/screenshots/home_capture.png)
 
 # Testing
 ServerStatus depends on a number of system files being in the right place. It has been tested on recent Debian based distributions, including Debian 6 and above, Ubuntu 12.04 and above, and all Raspbian builds. Other distributions should work just fine, but if you notice anything wrong on another distro please let me know!
