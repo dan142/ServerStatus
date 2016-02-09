@@ -29,6 +29,7 @@ b {
 a {
 	text-decoration: none;
 	color: #aaa;
+    transition: color .2s ease-in-out;
 }
 
 a:hover {
@@ -94,13 +95,14 @@ h6 {
 input, textarea, select, button { 
 	padding: 9px 0;
 	color: #ccc;
-	border: solid 1px #E5E5E5;
+	border: solid 1px #A9A9A9;
 	outline: 0;
 	font-family: 'Open Sans', Arial, sans-serif;
 	font-size: 12px;
 	width: 198px;
 	background: #333;
 	text-align: center;
+    transition: color .2s ease-in-out;
 	}
 
 textarea { 
@@ -172,10 +174,6 @@ div#modules > div:only-child {
 	padding: 0 0 40px 0;
 	border-bottom: 0;
 }
-
-/*div#modules > div > div {
-	margin-bottom: 20px;
-}*/
 
 div#modules > div:nth-child(odd) > div.chart {
 	float:right
