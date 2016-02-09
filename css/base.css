@@ -29,12 +29,12 @@ b {
 a {
 	text-decoration: none;
 	color: #aaa;
-    transition: color .2s ease-in-out;
 }
 
 a:hover {
 	text-decoration: none;
 	color: #777;
+    transition: color .2s ease-in-out;
 }
 
 h1 {
@@ -102,7 +102,6 @@ input, textarea, select, button {
 	width: 198px;
 	background: #333;
 	text-align: center;
-    transition: color .2s ease-in-out;
 	}
 
 textarea { 
@@ -119,6 +118,7 @@ button:hover, button:focus {
 	border-color: #C9C9C9;
 	background: #444;
 	color: #ccc;
+    transition: all .2s ease-in-out;
 	}
 
 
