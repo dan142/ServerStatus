@@ -20,6 +20,7 @@ p {
 	font-weight: 300;
 	color: #eee;
 	line-height: 22px;
+	padding: 0 0 12px 0;
 }
 
 b {
@@ -57,6 +58,7 @@ h2 {
 	font-size: 30px;
 	color: #eee;
 	line-height:36px;
+	padding: 10px 0 14px 0;
 }
 
 h3 {
@@ -65,24 +67,28 @@ h3 {
 	font-weight: 400;
 	padding: 0 0 10px;
 	color: #eee;
+	padding: 8px 0 12px 0;
 }
 
 h4 {
 	color: #eee;
 	font-size: 20px;
 	line-height:24px;
+	padding: 6px 0 8px 0;
 }
 
 h5 {
 	color: #eee;
 	font-size: 18px;
 	line-height:22px;
+	padding: 6px 0 8px 0;
 }
 
 h6 {
 	font-size: 14px;
 	padding-bottom: 10px;
 	font-weight: bold;
+	padding: 6px 0 8px 0;
 }
 
 .container .clear, body .clear {
@@ -102,7 +108,11 @@ input, textarea, select, button {
 	width: 198px;
 	background: #333;
 	text-align: center;
-	}
+}
+
+.submit {
+	margin: 36px 0 10px 0;
+}
 
 textarea { 
 	width: 200px;
@@ -119,7 +129,7 @@ button:hover, button:focus {
 	background: #444;
 	color: #ccc;
     transition: all .2s ease-in-out;
-	}
+}
 
 
 
@@ -177,6 +187,62 @@ div#modules > div:only-child {
 
 div#modules > div:nth-child(odd) > div.chart {
 	float:right
+}
+
+
+
+/*==============*/
+/*=== Config ===*/
+/*==============*/
+
+.switch {
+	position: relative;
+	display: inline-block;
+	width: 60px;
+	height: 34px;
+	margin: 0 0 8px 0;
+}
+
+.switch input {
+	display:none;
+}
+
+.slider {
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+  	right: 0;
+  	bottom: 0;
+  	background-color: #E43825;
+  	-webkit-transition: .4s;
+  	transition: .4s;
+}
+
+.slider:before {
+  	position: absolute;
+  	content: "";
+  	height: 26px;
+  	width: 26px;
+  	left: 4px;
+  	bottom: 4px;
+  	background-color: #fff;
+  	-webkit-transition: .4s;
+  	transition: .4s;
+}
+
+input:checked + .slider {
+  	background-color: #2196F3;
+}
+
+input:focus + .slider {
+  	box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .slider:before {
+  	-webkit-transform: translateX(26px);
+  	-ms-transform: translateX(26px);
+  	transform: translateX(26px);
 }
 
 

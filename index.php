@@ -4,79 +4,50 @@
 <!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
 <!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
 <head>
+	<!--<meta http-equiv="X-UA-Compatible" content="IE=9" />-->
 	<meta charset="utf-8">
 	<title>ServerStatus</title>
 	<meta name="description" content="ServerStatus">
 	<link rel="shortcut icon" href="./img/favicon.png" />
-	<!--<meta http-equiv="X-UA-Compatible" content="IE=9" />-->
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 	<link rel="stylesheet" href="./css/reset.min.css">
 	<link rel="stylesheet" href="./css/base.css">
 	<link rel="stylesheet" href="./css/skeleton.min.css">
+	<meta name="theme-color" content="#333">
+	<meta name="msapplication-navbutton-color" content="#333">
 
-	<script type="text/javascript" src="http://code.jquery.com/jquery-latest.min.js"></script>
+	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
     <script type="text/javascript" src="js/Chart.min.js"></script>
     <script type="text/javascript" src="js/angular.min.js"></script>
-	<?php
-		$config = parse_ini_file('./conf/conf.ini', true);
-		if ($config["os"]["display"] != false) {
-			$uptime = shell_exec("cut -d. -f1 /proc/uptime");
-			$days = floor($uptime/60/60/24);
-			$hours = $uptime/60/60%24;
-			$mins = $uptime/60%60;
-			$secs = $uptime%60;
-		}
-		if ($config["cpu"]["display"]) {
-			$prevVal = shell_exec("cat /proc/stat");
-			$prevArr = explode(' ',trim($prevVal));
-			$prevTotal = $prevArr[2] + $prevArr[3] + $prevArr[4] + $prevArr[5];
-			$prevIdle = $prevArr[5];
-			usleep(0.15 * 1000000);
-			$val = shell_exec("cat /proc/stat");
-			$arr = explode(' ', trim($val));
-			$total = $arr[2] + $arr[3] + $arr[4] + $arr[5];
-			$idle = $arr[5];
-			$intervalTotal = intval($total - $prevTotal);
-			$stat['cpu'] =  intval(100 * (($intervalTotal - ($idle - $prevIdle)) / $intervalTotal));
-			$cpu_result = shell_exec("cat /proc/cpuinfo | grep model\ name");
-			$stat['cpu_model'] = strstr($cpu_result, "\n", true);
-			$stat['cpu_model'] = str_replace("model name	: ", "", $stat['cpu_model']);
-		}
-		if ($config["memory"]["display"] != false) {
-			$stat['mem_percent'] = round(shell_exec("free | grep Mem | awk '{print $3/$2 * 100.0}'"), 2);
-			$mem_result = shell_exec("cat /proc/meminfo | grep MemTotal");
-			$stat['mem_total'] = round(preg_replace("#[^0-9]+(?:\.[0-9]*)?#", "", $mem_result) / 1024 / 1024, 3);
-			$mem_result = shell_exec("cat /proc/meminfo | grep MemFree");
-			$stat['mem_free'] = round(preg_replace("#[^0-9]+(?:\.[0-9]*)?#", "", $mem_result) / 1024 / 1024, 3);
-			$stat['mem_used'] = $stat['mem_total'] - $stat['mem_free'];
-		}
-		if ($config["hdd1"]["display"] != false) {
-			$stat['hdd1_free'] = round(disk_free_space($config['hdd1']['path']) / 1024 / 1024 / 1024, 2);
-			$stat['hdd1_total'] = round(disk_total_space($config['hdd1']['path']) / 1024 / 1024/ 1024, 2);
-			$stat['hdd1_used'] = $stat['hdd1_total'] - $stat['hdd1_free'];
-			$stat['hdd1_percent'] = round(sprintf('%.2f',($stat['hdd1_used'] / $stat['hdd1_total']) * 100), 2);
-		}
-		if ($config["hdd2"]["display"] != false) {
-			$stat['hdd2_free'] = round(disk_free_space($config['hdd2']['path']) / 1024 / 1024 / 1024, 2);
-			$stat['hdd2_total'] = round(disk_total_space($config['hdd2']['path']) / 1024 / 1024/ 1024, 2);
-			$stat['hdd2_used'] = $stat['hdd2_total'] - $stat['hdd2_free'];
-			$stat['hdd2_percent'] = round(sprintf('%.2f',($stat['hdd2_used'] / $stat['hdd2_total']) * 100), 2);
-		}
-		if ($config["hdd3"]["display"] != false) {
-			$stat['hdd3_free'] = round(disk_free_space($config['hdd3']['path']) / 1024 / 1024 / 1024, 2);
-			$stat['hdd3_total'] = round(disk_total_space($config['hdd3']['path']) / 1024 / 1024/ 1024, 2);
-			$stat['hdd3_used'] = $stat['hdd3_total'] - $stat['hdd3_free'];
-			$stat['hdd3_percent'] = round(sprintf('%.2f',($stat['hdd3_used'] / $stat['hdd3_total']) * 100), 2);
-		}
-		if ($config["network"]["display"] != false) {
-			$stat['network_rx'] = round(trim(file_get_contents("/sys/class/net/".$config['network']['interface']."/statistics/rx_bytes")) / 1024/ 1024/ 1024, 2);
-			$stat['network_tx'] = round(trim(file_get_contents("/sys/class/net/".$config['network']['interface']."/statistics/tx_bytes")) / 1024/ 1024/ 1024, 2);
-		}
-	?>
 
 	<!--[if lt IE 9]>
 		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
 	<![endif]-->
+
+	<?php
+		$config = parse_ini_file('./conf/conf.ini', true);
+		if ($config["display"]["os"] != false) {
+			include './php/get_os.php';
+		}
+		if ($config["display"]["cpu"] != false) {
+			include './php/get_cpu.php';
+		}
+		if ($config["display"]["memory"] != false) {
+			include './php/get_memory.php';
+		}
+		if ($config["display"]["hdd1"] != false) {
+			include './php/get_hdd1.php';
+		}
+		if ($config["display"]["hdd2"] != false) {
+			include './php/get_hdd2.php';
+		}
+		if ($config["display"]["hdd3"] != false) {
+			include './php/get_hdd3.php';
+		}
+		if ($config["display"]["network"] != false) {
+			include './php/get_network.php';
+		}
+	?>
 
 </head>
 
@@ -93,7 +64,7 @@
 <!--Content-->
 
 	<div class='content' id='modules'>
-		<?php if ($config["os"]["display"] != false): ?>
+		<?php if ($config["display"]["os"] != false): ?>
 		<div class='container'>
 			<div class='sixteen columns'>
 				<h3>Operating System</h3>
@@ -104,7 +75,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($config["memory"]["display"] != false): ?>
+		<?php if ($config["display"]["memory"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="memory" height="172" width="172"></canvas>
@@ -139,7 +110,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($config["hdd1"]["display"] != false): ?>
+		<?php if ($config["display"]["hdd1"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="hdd1" height="172" width="172"></canvas>
@@ -174,7 +145,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($config["hdd2"]["display"] != false): ?>
+		<?php if ($config["display"]["hdd2"] != false): ?>
 			<div class='container'>
 				<div class='six columns chart'>
 					<canvas id="hdd2" height="172" width="172"></canvas>
@@ -209,7 +180,7 @@
 				</div>
 			</div>
 		<?php endif ?>
-		<?php if ($config["hdd3"]["display"] != false): ?>
+		<?php if ($config["display"]["hdd3"] != false): ?>
 			<div class='container'>
 				<div class='six columns chart'>
 					<canvas id="hdd3" height="172" width="172"></canvas>
@@ -244,7 +215,7 @@
 				</div>
 			</div>
 		<?php endif ?> 
-		<?php if ($config["cpu"]["display"] != false): ?>
+		<?php if ($config["display"]["cpu"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="cpu" height="172" width="172"></canvas>
@@ -277,7 +248,7 @@
 			</div>
 		</div>
 		<?php endif ?> 
-		<?php if ($config["network"]["display"] != false): ?>
+		<?php if ($config["display"]["network"] != false): ?>
 		<div class='container'>
 			<div class='six columns chart'>
 				<canvas id="net" height="172" width="240"></canvas>
