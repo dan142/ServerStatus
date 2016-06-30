@@ -1,10 +1,8 @@
 <!DOCTYPE html>
-<!--[if lt IE 7 ]><html class="ie ie6" lang="en"> <![endif]-->
-<!--[if IE 7 ]><html class="ie ie7" lang="en"> <![endif]-->
-<!--[if IE 8 ]><html class="ie ie8" lang="en"> <![endif]-->
-<!--[if (gte IE 9)|!(IE)]><!--><html lang="en"> <!--<![endif]-->
+
+<html lang="en">
+
 <head>
-	<!--<meta http-equiv="X-UA-Compatible" content="IE=9" />-->
 	<meta charset="utf-8">
 	<title>ServerStatus</title>
 	<meta name="description" content="ServerStatus">
@@ -16,290 +14,88 @@
 	<meta name="theme-color" content="#333">
 	<meta name="msapplication-navbutton-color" content="#333">
 
-	<script type="text/javascript" src="js/jquery-1.12.3.min.js"></script>
-    <script type="text/javascript" src="js/Chart.min.js"></script>
-    <script type="text/javascript" src="js/angular.min.js"></script>
-
-	<!--[if lt IE 9]>
-		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
-	<![endif]-->
+	<script type="text/javascript" src="./js/jquery-1.12.3.min.js"></script>
+    <script type="text/javascript" src="./js/Chart.min.js"></script>
+    <!--<script type="text/javascript" src="./js/angular.min.js"></script>-->
 
 	<?php
-		$config = parse_ini_file('./conf/conf.ini', true);
-		if ($config["display"]["os"] != false) {
-			include './php/get_os.php';
-		}
-		if ($config["display"]["cpu"] != false) {
-			include './php/get_cpu.php';
-		}
-		if ($config["display"]["memory"] != false) {
-			include './php/get_memory.php';
-		}
-		if ($config["display"]["hdd1"] != false) {
-			include './php/get_hdd1.php';
-		}
-		if ($config["display"]["hdd2"] != false) {
-			include './php/get_hdd2.php';
-		}
-		if ($config["display"]["hdd3"] != false) {
-			include './php/get_hdd3.php';
-		}
-		if ($config["display"]["network"] != false) {
-			include './php/get_network.php';
-		}
+		$root = "./";
+		$config = parse_ini_file('./conf/server_conf.ini', true);
 	?>
 
 </head>
 
 <body>
-	<header>
-		<a id="top"></a>
-		<div class='container'>
-			<div class='sixteen columns'>
-				<h1><a href='./'>ServerStatus</a></h1>
-			</div>
-		</div>
-	</header>
+	<?php include $root.'modules/common/mod_header.php' ?>
 
 <!--Content-->
 
 	<div class='content' id='modules'>
-		<?php if ($config["display"]["os"] != false): ?>
-		<div class='container'>
-			<div class='sixteen columns'>
-				<h3>Operating System</h3>
-				<p>Operating System: <?php echo php_uname('s'); ?><br>
-				Kernel: <?php echo php_uname('r'); ?><br>
-				Uptime: <?php echo "$days days $hours hours $mins minutes and $secs seconds"; ?>
-				</p>
-			</div>
-		</div>
-		<?php endif ?> 
-		<?php if ($config["display"]["memory"] != false): ?>
-		<div class='container'>
-			<div class='six columns chart'>
-				<canvas id="memory" height="172" width="172"></canvas>
-				<script>
-					var data = [
-					    {
-					    	label: "Used",
-					        value: <?php echo $stat['mem_used']; ?>,
-					        color: "#e74c3c",
-					        highlight: "#E43825"
-					    },
-					    {
-					    	label: "Free",
-					        value: <?php echo $stat['mem_free']; ?>,
-					        color:"#2980b9",
-					        highlight: "#2573A7"
-					    }
-					];
-					var options = {animateRotate:false, animateScale:false, segmentStrokeColor : "#ccc", tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' GB' %>"};
-					var canvas = document.getElementById("memory");
-					var ctx = canvas.getContext("2d");
-					new Chart(ctx).Pie(data,options);
-				</script>
-			</div>
-			<div class='ten columns'>
-				<h3>Memory</h3>
-				<p>Percentage Used: <?php echo $stat['mem_percent'],"%"; ?><br>
-				Total Memory: <?php echo $stat['mem_total']," GB"; ?><br>
-				Free Memory: <?php echo $stat['mem_free']," GB"; ?><br>
-				Used Memory: <?php echo $stat['mem_used']," GB"; ?>
-				</p>
-			</div>
-		</div>
-		<?php endif ?> 
-		<?php if ($config["display"]["hdd1"] != false): ?>
-		<div class='container'>
-			<div class='six columns chart'>
-				<canvas id="hdd1" height="172" width="172"></canvas>
-				<script>
-					var data = [
-					    {
-					    	label: "Used",
-					        value: <?php echo $stat['hdd1_used']; ?>,
-					        color: "#e74c3c",
-					        highlight: "#E43825"
-					    },
-					    {
-					    	label: "Free",
-					        value: <?php echo $stat['hdd1_free']; ?>,
-					        color:"#2980b9",
-					        highlight: "#2573A7"
-					    }
-					];
-					var options = {animateRotate:false, animateScale:false, segmentStrokeColor : "#ccc", tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' GB' %>"};
-					var canvas = document.getElementById("hdd1");
-					var ctx = canvas.getContext("2d");
-					new Chart(ctx).Pie(data,options);
-				</script>
-			</div>
-			<div class='ten columns'>
-				<h3>Hard Drive 1 (<?php echo $config['hdd1']['path']; ?>)</h3>
-				<p>Hard Drive Usage: <?php echo $stat['hdd1_percent'],"%"; ?><br>
-				Hard Drive Capacity: <?php echo $stat['hdd1_total']," GB"; ?><br>
-				Hard Drive Free Space: <?php echo $stat['hdd1_free']," GB"; ?><br>
-				Hard Drive Used Space: <?php echo $stat['hdd1_used']," GB"; ?>
-				</p>
-			</div>
-		</div>
-		<?php endif ?> 
-		<?php if ($config["display"]["hdd2"] != false): ?>
-			<div class='container'>
-				<div class='six columns chart'>
-					<canvas id="hdd2" height="172" width="172"></canvas>
-					<script>
-						var data = [
-						    {
-						    	label: "Used",
-						        value: <?php echo $stat['hdd2_used']; ?>,
-						        color: "#e74c3c",
-						        highlight: "#E43825"
-						    },
-						    {
-						    	label: "Free",
-						        value: <?php echo $stat['hdd2_free']; ?>,
-						        color:"#2980b9",
-						        highlight: "#2573A7"
-						    }
-						];
-						var options = {animateRotate:false, animateScale:false, segmentStrokeColor : "#ccc", tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' GB' %>"};
-						var canvas = document.getElementById("hdd2");
-						var ctx = canvas.getContext("2d");
-						new Chart(ctx).Pie(data,options);
-					</script>
-				</div>
-				<div class='ten columns'>
-					<h3>Hard Drive 2 (<?php echo $config['hdd2']['path']; ?>)</h3>
-					<p>Hard Drive Usage: <?php echo $stat['hdd2_percent'],"%"; ?><br>
-					Hard Drive Capacity: <?php echo $stat['hdd2_total']," GB"; ?><br>
-					Hard Drive Free Space: <?php echo $stat['hdd2_free']," GB"; ?><br>
-					Hard Drive Used Space: <?php echo $stat['hdd2_used']," GB"; ?>
-					</p>
-				</div>
-			</div>
-		<?php endif ?>
-		<?php if ($config["display"]["hdd3"] != false): ?>
-			<div class='container'>
-				<div class='six columns chart'>
-					<canvas id="hdd3" height="172" width="172"></canvas>
-					<script>
-						var data = [
-						    {
-						    	label: "Used",
-						        value: <?php echo $stat['hdd3_used']; ?>,
-						        color: "#e74c3c",
-						        highlight: "#E43825"
-						    },
-						    {
-						    	label: "Free",
-						        value: <?php echo $stat['hdd3_free']; ?>,
-						        color:"#2980b9",
-						        highlight: "#2573A7"
-						    }
-						];
-						var options = {animateRotate:false, animateScale:false, segmentStrokeColor : "#ccc", tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' GB' %>"};
-						var canvas = document.getElementById("hdd3");
-						var ctx = canvas.getContext("2d");
-						new Chart(ctx).Pie(data,options);
-					</script>
-				</div>
-				<div class='ten columns'>
-					<h3>Hard Drive 3 (<?php echo $config['hdd3']['path']; ?>)</h3>
-					<p>Hard Drive Usage: <?php echo $stat['hdd3_percent'],"%"; ?><br>
-					Hard Drive Capacity: <?php echo $stat['hdd3_total']," GB"; ?><br>
-					Hard Drive Free Space: <?php echo $stat['hdd3_free']," GB"; ?><br>
-					Hard Drive Used Space: <?php echo $stat['hdd3_used']," GB"; ?>
-					</p>
-				</div>
-			</div>
-		<?php endif ?> 
-		<?php if ($config["display"]["cpu"] != false): ?>
-		<div class='container'>
-			<div class='six columns chart'>
-				<canvas id="cpu" height="172" width="172"></canvas>
-				<script>
-					var data = [
-					    {
-					    	label: "Used",
-					        value: <?php echo $stat['cpu']; ?>,
-					        color: "#e74c3c",
-					        highlight: "#E43825"
-					    },
-					    {
-					    	label: "Free",
-					        value: 100 - <?php echo $stat['cpu']; ?>,
-					        color:"#2980b9",
-					        highlight: "#2573A7"
-					    }
-					];
-					var options = {animateRotate:false, animateScale:false, segmentStrokeColor : "#ccc", tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + '%' %>"};
-					var canvas = document.getElementById("cpu");
-					var ctx = canvas.getContext("2d");
-					new Chart(ctx).Pie(data,options);
-				</script>
-			</div>
-			<div class='ten columns'>
-				<h3>CPU</h3>
-				<p>CPU Model: <?php echo $stat['cpu_model']; ?><br>
-				CPU Usage: <?php echo $stat['cpu'],"%"; ?>
-				</p>
-			</div>
-		</div>
-		<?php endif ?> 
-		<?php if ($config["display"]["network"] != false): ?>
-		<div class='container'>
-			<div class='six columns chart'>
-				<canvas id="net" height="172" width="240"></canvas>
-				<script>
-					var data = {
-					    labels: ["TX", "RX"],
-					    datasets: [
-					        {
-					            label: "value",
-					            fillColor: "#2980b9",
-					            strokeColor: "#CCCCCC",
-					            highlightFill: "#2573A7",
-					            data: [<?php echo $stat['network_tx']; ?>, <?php echo $stat['network_rx']; ?>]
-					        },
-					    ]
-					};
-					var options = {animation : false, scaleLabel : "<%=value%>GB", scaleBeginAtZero : true, scaleShowGridLines : false, barValueSpacing : 20, scaleShowVerticalLines: false, scaleShowHorizontalLines: false, tooltipTemplate: "<%if (label){%><%=label %>: <%}%><%= value + ' GB' %>"};
-					var canvas = document.getElementById("net");
-					var ctx = canvas.getContext("2d");
-					new Chart(ctx).Bar(data,options);
-				</script>
-			</div>
-			<div class='ten columns'>
-				<h3>Network</h3>
-				<p>IP Address: <?php echo $_SERVER['SERVER_ADDR']; ?><br>
-				Network Tx: <?php echo $stat['network_tx']," GB"; ?><br>
-				Network Rx: <?php echo $stat['network_rx']," GB"; ?>
-				</p>
-			</div>
-		</div>
-		<?php endif ?> 
+		<?php 
+			if ($config["display"]["os"] != false) {
+				ob_start();
+				$stat['os_name'] = include './php/poll/poll_os_name.php';
+				$stat['os_kernel'] = include './php/poll/poll_os_kernel.php';
+				$stat['os_uptime'] = include './php/poll/poll_os_uptime.php';
+				ob_end_clean();
+				include './modules/stat/mod_os.php';
+			}
+			if ($config["display"]["memory"] != false) {
+				ob_start();
+				$stat['memory_total'] = include './php/poll/poll_memory_total.php';
+				$stat['memory_free'] = include './php/poll/poll_memory_free.php';
+				$stat['memory_used'] = $stat['memory_total'] - $stat['memory_free'];
+				$stat['memory_percent'] = round($stat['memory_used'] / $stat['memory_total'] * 100, 2);
+				ob_end_clean();
+				include './modules/stat/mod_memory.php';
+			}
+			if ($config["display"]["hdd1"] != false) {
+				ob_start();
+				$stat['hdd1_total'] = include './php/poll/poll_hdd1_total.php';
+				$stat['hdd1_free'] = include './php/poll/poll_hdd1_free.php';
+				$stat['hdd1_used'] = $stat['hdd1_total'] - $stat['hdd1_free'];
+				$stat['hdd1_percent'] = round($stat['hdd1_used'] / $stat['hdd1_total'] * 100, 2);
+				ob_end_clean();
+				include './modules/stat/mod_hdd1.php';
+			}
+			if ($config["display"]["hdd2"] != false) {
+				ob_start();
+				$stat['hdd2_total'] = include './php/poll/poll_hdd2_total.php';
+				$stat['hdd2_free'] = include './php/poll/poll_hdd2_free.php';
+				$stat['hdd2_used'] = $stat['hdd2_total'] - $stat['hdd2_free'];
+				$stat['hdd2_percent'] = round($stat['hdd2_used'] / $stat['hdd2_total'] * 100, 2);
+				ob_end_clean();
+				include './modules/stat/mod_hdd2.php';
+			}
+			if ($config["display"]["hdd3"] != false) {
+				ob_start();
+				$stat['hdd3_total'] = include './php/poll/poll_hdd3_total.php';
+				$stat['hdd3_free'] = include './php/poll/poll_hdd3_free.php';
+				$stat['hdd3_used'] = $stat['hdd3_total'] - $stat['hdd3_free'];
+				$stat['hdd3_percent'] = round($stat['hdd3_used'] / $stat['hdd3_total'] * 100, 2);
+				ob_end_clean();
+				include './modules/stat/mod_hdd3.php';
+			}
+			if ($config["display"]["cpu"] != false) {
+				ob_start();
+				$stat['cpu_model'] = include './php/poll/poll_cpu_model.php';
+				$stat['cpu_usage'] = include './php/poll/poll_cpu_usage.php';
+				ob_end_clean();
+				include './modules/stat/mod_cpu.php';
+			}
+			if ($config["display"]["network"] != false) {
+				ob_start();
+				$stat['network_rx'] = include './php/poll/poll_network_rx.php';
+				$stat['network_tx'] = include './php/poll/poll_network_tx.php';
+				ob_end_clean();
+				include './modules/stat/mod_network.php';
+			}
+		?>
 	</div>
 
 <!--Footer-->
 
-	<footer>
-		<div class='container'>
-			<div class='eight columns'>
-				<h5>Configure</h5>
-				<p>Visit the <a href='./conf'>configuration</a> page to alter which modules are displayed by ServerStatus, or to modify the content of them.</p>
-			</div>
-			<div class='eight columns'>
-				<h5>GitHub</h5>
-				<p>Visit the ServerStatus <a href='https://github.com/dan142/ServerStatus'>GitHub page</a> to access the documentation or to help by submitting improvements.</p>
-			</div>
-		</div>
-	</footer>
-
-<!--Scripts-->
-
-
+	<?php include $root.'modules/common/mod_footer.php' ?>
 
 </body>
 </html>
